@@ -21,7 +21,7 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-data-jpa")
 
     // QueryDSL
-    implementation("com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta")
+    api("com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta")
     kapt("com.querydsl:querydsl-apt:${queryDslVersion}:jakarta")
     annotationProcessor("jakarta.annotation:jakarta.annotation-api")
     annotationProcessor("jakarta.persistence:jakarta.persistence-api")

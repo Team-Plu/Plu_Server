@@ -30,6 +30,7 @@ CREATE TABLE `questions`
 (
     `question_id`      bigint auto_increment primary key,
     `element_type`     varchar(30)  NOT NULL,
+    `question_date`    datetime     NOT NULL,
     `question_title`   varchar(100) NOT NULL,
     `question_content` varchar(300) NOT NULL,
     `created_at`       datetime     NOT NULL,

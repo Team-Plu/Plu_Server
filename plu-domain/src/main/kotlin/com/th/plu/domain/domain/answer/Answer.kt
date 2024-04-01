@@ -41,6 +41,10 @@ class Answer(
 
 ) : BaseEntity() {
 
+    fun getQuestionId(): Long {
+        return question.id!!
+    }
+
     fun getLikeCount(): Int {
         return likes.size
     }

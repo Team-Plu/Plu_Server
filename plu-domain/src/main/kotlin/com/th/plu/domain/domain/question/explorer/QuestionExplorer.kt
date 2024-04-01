@@ -14,4 +14,9 @@ class QuestionExplorer(
         return questionRepository.findQuestionById(id)
                 ?: throw NotFoundException(ErrorCode.NOT_FOUND_QUESTION_EXCEPTION, "존재하지 않는 질문(ID: $id) 입니다")
     }
+
+    fun findTodayQuestion(): Question {
+        return questionRepository.findTodayQuestion()
+                ?: throw NotFoundException(ErrorCode.NOT_FOUND_QUESTION_EXCEPTION, "오늘의 질문이 존재하지 않습니다")
+    }
 }
