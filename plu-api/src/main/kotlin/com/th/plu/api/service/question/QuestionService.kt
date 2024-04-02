@@ -1,5 +1,8 @@
-package com.th.plu.domain.domain.question
+package com.th.plu.api.service.question
 
+import com.th.plu.domain.domain.answer.AnswerExplorer
+import com.th.plu.domain.domain.question.QuestionExplorer
+import com.th.plu.domain.domain.question.QuestionResultDto
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -8,17 +11,22 @@ import java.time.YearMonth
 @Service
 class QuestionService(
     private val questionExplorer: QuestionExplorer,
+    private val answerExplorer: AnswerExplorer,
 ) {
     @Transactional(readOnly = true)
-    fun getQuestionToday(): QuestionResultDto {
+    fun getQuestionToday(memberId: Long): QuestionResultDto {
         val today = LocalDateTime.now()
+
         return questionExplorer.findQuestion(today).let { todayQuestion ->
+            val answered = answerExplorer.hasAnswered(memberId, todayQuestion.id)
+
             QuestionResultDto(
                 questionId = todayQuestion.id,
                 title = todayQuestion.title,
                 content = todayQuestion.content,
                 elementType = todayQuestion.elementType,
                 exposedAt = todayQuestion.exposedAt,
+                answered = answered,
             )
         }
     }
@@ -32,12 +40,13 @@ class QuestionService(
                     title = it.title,
                     content = it.content,
                     elementType = it.elementType,
-                    exposedAt = it.exposedAt
+                    exposedAt = it.exposedAt,
+                    answered = true, // 내가 한 답변들
                 )
             }
             .sortedByDescending { it.exposedAt } // 최신순 조회
 
     @Transactional(readOnly = true)
-    fun getYearMonthAnswered(memberId: Long) : Set<YearMonth> =
+    fun getYearMonthAnswered(memberId: Long): Set<YearMonth> =
         questionExplorer.findAnsweredYearMonth(memberId)
 }

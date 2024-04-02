@@ -4,7 +4,7 @@ import com.th.plu.api.config.interceptor.Auth
 import com.th.plu.api.config.resolver.MemberId
 import com.th.plu.api.controller.question.dto.*
 import com.th.plu.common.dto.response.ApiResponse
-import com.th.plu.domain.domain.question.QuestionService
+import com.th.plu.api.service.question.QuestionService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.format.annotation.DateTimeFormat
@@ -21,7 +21,9 @@ class QuestionController(
     @Auth
     @Operation(summary = "오늘의 질문")
     @GetMapping("/api/v1/questions/today")
-    fun getQuestionToday(): ApiResponse<QuestionTodayResponseDto> = questionService.getQuestionToday().let {
+    fun getQuestionToday(
+        @MemberId memberId: Long,
+    ): ApiResponse<QuestionTodayResponseDto> = questionService.getQuestionToday(memberId).let {
         ApiResponse.success(toQuestionTodayResponseDto(it))
     }
 

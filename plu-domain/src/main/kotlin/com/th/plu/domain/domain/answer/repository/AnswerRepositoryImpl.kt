@@ -56,4 +56,14 @@ class AnswerRepositoryImpl(private val queryFactory: JPAQueryFactory) : AnswerRe
                 .limit(getCount)
                 .fetch()
     }
+
+    override fun existsByMemberIdAndQuestionId(memberId: Long, questionId: Long): Boolean {
+        return queryFactory
+            .selectFrom(answer)
+            .where(
+                answer.member.id.eq(memberId),
+                answer.question._id.eq(questionId),
+            )
+            .fetchFirst() != null
+    }
 }

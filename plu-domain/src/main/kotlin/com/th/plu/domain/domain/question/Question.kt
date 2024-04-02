@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 class Question(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "question_id")
-    var _id: Long? = null,
+    private var _id: Long? = null,
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     var answers: List<Answer>,

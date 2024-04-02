@@ -11,41 +11,52 @@ import lombok.Builder
 import lombok.NoArgsConstructor
 
 
-@Table(name = "answers")
+@Table(
+    name = "answers",
+    uniqueConstraints = [
+        UniqueConstraint(name = "idk01_answers", columnNames = ["member_id", "question_id"])
+    ]
+)
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
 class Answer(
 
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name = "answer_id")
-        var id: Long? = null,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "answer_id")
+    private var _id: Long? = null,
 
-        @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-        @JoinColumn(name = "member_id", nullable = false)
-        var member: Member,
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "member_id", nullable = false)
+    private var member: Member,
 
-        @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-        @JoinColumn(name = "question_id", nullable = false)
-        var question: Question,
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "question_id", nullable = false)
+    private var question: Question,
 
-        @Column(name = "answer_content", nullable = false)
-        var content: String,
+    @OneToMany(mappedBy = "answer", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    private var likes: List<Like> = mutableListOf(),
 
-        @Column(name = "is_public", nullable = false)
-        var isPublic: Boolean,
-
-        @OneToMany(mappedBy = "answer", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
-        var likes: List<Like> = mutableListOf()
-
+    content: String,
+    isPublic: Boolean,
 ) : BaseEntity() {
+    val id: Long
+        get() = _id ?: throw PersistenceException("아직 save 되지 않은 entity 의 id 에대한 접근입니다.")
 
-    fun getQuestionId(): Long {
-        return question.id!!
-    }
+    @Column(name = "answer_content", nullable = false)
+    var content: String = content
+        private set
 
-    fun getLikeCount(): Int {
-        return likes.size
-    }
+    @Column(name = "is_public", nullable = false)
+    var isPublic: Boolean = isPublic
+        private set
 }
+
+fun newAnswerInstance(member: Member, question: Question, content: String, isPublic: Boolean) = Answer(
+    _id = null,
+    member = member,
+    question = question,
+    content = content,
+    isPublic = isPublic,
+)

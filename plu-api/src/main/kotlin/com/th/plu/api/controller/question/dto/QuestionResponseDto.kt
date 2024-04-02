@@ -5,6 +5,7 @@ import com.th.plu.domain.domain.question.QuestionResultDto
 import java.time.LocalDateTime
 
 data class QuestionResponseDto(
+    val id: Long,
     val title: String,
     val content: String,
     val exposedAt: LocalDateTime,
@@ -14,6 +15,7 @@ data class QuestionResponseDto(
 )
 
 internal fun toQuestionResponseDto(result: QuestionResultDto) = QuestionResponseDto(
+    id = result.questionId,
     title = result.title,
     content = result.content,
     exposedAt = result.exposedAt,
