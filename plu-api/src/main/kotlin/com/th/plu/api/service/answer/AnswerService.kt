@@ -39,7 +39,7 @@ class AnswerService(
         if (!answer.isPublic) {
             answerValidator.validateIsMemberOwnerOfAnswer(answerId, memberId)
         }
-        val question = questionExplorer.findQuestionById(answer.getQuestionId())
+        val question = questionExplorer.findQuestion(answer.questionId)
 
         return AnswerInfoResponse.of(question, answer)
     }
@@ -65,21 +65,21 @@ class AnswerService(
     @Transactional(readOnly = true)
     fun findEveryAnswersWithCursor(lastAnswerId: Long, pageSize: Long): EveryAnswerRetrieveResponses {
         val todayQuestionId = questionExplorer.findTodayQuestion().id
-        val answers = answerRepository.findEveryAnswersWithCursorAndPageSize(todayQuestionId!!, lastAnswerId, pageSize)
+        val answers = answerRepository.findEveryAnswersWithCursorAndPageSize(todayQuestionId, lastAnswerId, pageSize)
         return EveryAnswerRetrieveResponses(answers)
     }
 
     @Transactional(readOnly = true)
     fun findEveryAnswerInfo(): EveryAnswerInfoResponse {
         val todayQuestion = questionExplorer.findTodayQuestion()
-        val answerCount = answerRepository.findPublicAnswersCountByQuestionId(todayQuestion.id!!)
+        val answerCount = answerRepository.findPublicAnswersCountByQuestionId(todayQuestion.id)
 
         return EveryAnswerInfoResponse.of(todayQuestion, answerCount)
     }
 
     fun findEveryAnswersLikeTopN(getCount: Long): EveryAnswerRetrieveResponses {
         val todayQuestion = questionExplorer.findTodayQuestion()
-        val answers = answerRepository.findPublicAnswersLikeTopN(todayQuestion.id!!, getCount)
+        val answers = answerRepository.findPublicAnswersLikeTopN(todayQuestion.id, getCount)
 
         return EveryAnswerRetrieveResponses(answers)
     }

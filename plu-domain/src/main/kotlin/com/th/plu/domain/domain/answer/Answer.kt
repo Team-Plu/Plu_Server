@@ -33,7 +33,7 @@ class Answer(
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "question_id", nullable = false)
-    private var question: Question,
+    var question: Question,
 
     @OneToMany(mappedBy = "answer", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     private var likes: List<Like> = mutableListOf(),
@@ -51,6 +51,8 @@ class Answer(
     @Column(name = "is_public", nullable = false)
     var isPublic: Boolean = isPublic
         private set
+
+    val questionId: Long = question.id
 }
 
 fun newAnswerInstance(member: Member, question: Question, content: String, isPublic: Boolean) = Answer(

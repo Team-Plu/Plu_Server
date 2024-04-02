@@ -29,4 +29,8 @@ class QuestionExplorer(
         questionRepository.findAllExposedAtInAnsweredMonth(memberId)
             .map { YearMonth.of(it.year, it.monthValue) }
             .toSet() // application 에서 중복 처리중, 500 넘는 warn log 발생시 월별 1건 조회하도록 쿼리 개선 필요!
+
+    fun findTodayQuestion(): Question {
+        return findQuestion(LocalDateTime.now())
+    }
 }
