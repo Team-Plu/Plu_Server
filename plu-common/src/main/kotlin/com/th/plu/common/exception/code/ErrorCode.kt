@@ -41,6 +41,7 @@ enum class ErrorCode(val code: String, val message: String) {
 
     // Internal Server Exception
     INTERNAL_SERVER_EXCEPTION("I001", "서버 내부에서 에러가 발생하였습니다."),
+    DATA_NOT_READY_EXCEPTION("I002", "질문 데이터가 준비되지 않았습니다."),
 
     // Bad Gateway Exception
     BAD_GATEWAY_EXCEPTION("B001", "외부 연동 중 에러가 발생하였습니다."),
