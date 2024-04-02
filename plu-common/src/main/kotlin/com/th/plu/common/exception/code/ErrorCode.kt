@@ -30,7 +30,7 @@ enum class ErrorCode(val code: String, val message: String) {
     NOT_FOUND_ARTICLE_EXCEPTION("N005", "삭제되었거나 존재하지 않는 아티클입니다."),
     NOT_FOUND_ARTICLE_IN_WEEK_AND_DAY_EXCEPTION("N006", "해당 주차 일차에 해당하는 아티클이 존재하지 않습니다."),
     NOT_FOUND_ENDPOINT_EXCEPTION("N007", "존재하지 않는 엔드포인트입니다."),
-    NOT_FOUND_ONBOARDING_EXCEPTION("N007", "존재하지 않는 엔드포인트입니다."),
+    NOT_FOUND_ONBOARDING_EXCEPTION("N008", "존재하지 않는 엔드포인트입니다."),
 
     // Conflict Exception
     CONFLICT_EXCEPTION("C001", "이미 존재합니다."),
@@ -38,6 +38,7 @@ enum class ErrorCode(val code: String, val message: String) {
     CONFLICT_LIKE_EXCEPTION("C003", "이미 해당 답변에 대한 공감이 되어있습니다."),
     CONFLICT_BOOKMARK_EXCEPTION("C003", "요청과 동일한 북마크 상태 입니다."),
     CONFLICT_NICKNAME_EXCEPTION("C004", "이미 사용 중인 닉네임 입니다."),
+    CONFLICT_ANSWER_EXCEPTION("C005", "이미 존재한 답변이 있습니다."),
 
     // Internal Server Exception
     INTERNAL_SERVER_EXCEPTION("I001", "서버 내부에서 에러가 발생하였습니다."),
