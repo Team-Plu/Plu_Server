@@ -2,21 +2,38 @@ package com.th.plu.api.controller.answer
 
 import com.th.plu.api.config.interceptor.Auth
 import com.th.plu.api.config.resolver.MemberId
+import com.th.plu.api.controller.answer.dto.WritingAnswerRequestDto
+import com.th.plu.api.controller.answer.dto.WritingAnswerResponseDto
 import com.th.plu.api.controller.answer.dto.response.AnswerInfoResponse
 import com.th.plu.api.controller.answer.dto.response.EveryAnswerInfoResponse
-import com.th.plu.api.service.answer.AnswerService
+import com.th.plu.api.controller.answer.dto.toAnswerWriting
+import com.th.plu.api.controller.answer.dto.toWritingAnswerResponse
 import com.th.plu.common.dto.response.ApiResponse
+import com.th.plu.api.service.answer.AnswerService
 import com.th.plu.domain.domain.answer.dto.EveryAnswerRetrieveResponses
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
 
-@Tag(name = "Answer")
+
+@Tag(name = "Answers")
 @RestController
 @RequestMapping("/api")
 class AnswerController(
-        private val answerService: AnswerService
+    private val answerService: AnswerService,
 ) {
+    @Auth
+    @Operation(summary = "오늘의 질문 답변하기")
+    @PostMapping("/v1/answers/{questionId}")
+    fun writeAnswer(
+        @MemberId memberId: Long,
+        @PathVariable("questionId") questionId: Long,
+        @RequestBody writingAnswerRequestDto: WritingAnswerRequestDto,
+    ): ApiResponse<WritingAnswerResponseDto> =
+        answerService.writeAnswer(memberId, questionId, toAnswerWriting(writingAnswerRequestDto)).let {
+            ApiResponse.success(toWritingAnswerResponse(it))
+        }
+
     @Auth
     @Operation(summary = "[인증] 질문 답변 조회")
     @GetMapping("/v1/answer/{answerId}")
@@ -52,8 +69,8 @@ class AnswerController(
     @Operation(summary = "[인증] 모두의 답변 조회(무한 스크롤)")
     @GetMapping("/v1/answers")
     fun paginateAnswersByCursor(
-            @RequestParam(defaultValue = Long.MAX_VALUE.toString()) lastAnswerId: Long,
-            @RequestParam(defaultValue = "10") pageSize: Long,
+        @RequestParam(defaultValue = Long.MAX_VALUE.toString()) lastAnswerId: Long,
+        @RequestParam(defaultValue = "10") pageSize: Long,
     ): ApiResponse<EveryAnswerRetrieveResponses> {
         return ApiResponse.success(answerService.findEveryAnswersWithCursor(lastAnswerId, pageSize))
     }
@@ -62,7 +79,7 @@ class AnswerController(
     @Operation(summary = "[인증] 모두의 답변 조회(좋아요 TopN)")
     @GetMapping("/v1/answers/popular")
     fun getAnswersAboutLikeTopN(
-            @RequestParam(defaultValue = "10") getCount: Long,
+        @RequestParam(defaultValue = "10") getCount: Long,
     ): ApiResponse<EveryAnswerRetrieveResponses> {
         return ApiResponse.success(answerService.findEveryAnswersLikeTopN(getCount))
     }
