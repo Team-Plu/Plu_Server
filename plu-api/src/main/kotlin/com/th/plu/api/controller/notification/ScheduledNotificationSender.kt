@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 class ScheduledNotificationSender(private val notificationService: NotificationService) {
     @Scheduled(cron = "0 0 22 * * ?")
     fun sendDailyNotification() {
-        notificationService.sendMessageToAllMember(MessageSendRequest.DAILY_QUESTION_MESSAGE())
+        notificationService.sendMessageToAllMember(MessageSendRequest.dailyQuestionMessage())
         log.info { "오늘의 질문 알림을 보냈습니다." }
     }
 }
