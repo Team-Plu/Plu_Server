@@ -7,9 +7,7 @@ import com.th.plu.domain.domain.member.QMember.member
 import com.th.plu.domain.domain.question.QQuestion.question
 import com.th.plu.domain.domain.question.Question
 import org.springframework.stereotype.Repository
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.YearMonth
 
 @Repository
@@ -74,15 +72,10 @@ class QuestionRepositoryImpl(private val queryFactory: JPAQueryFactory) : Questi
     }
 
     override fun findTodayQuestion(): Question? {
-        val today = LocalDate.now()
-        // 오늘 날짜의 시작 시간
-        val startOfDay = today.atStartOfDay()
-        // 오늘 날짜의 마지막 순간
-        val endOfDay = today.atTime(LocalTime.MAX)
+        val today = LocalDateTime.now()
         return queryFactory
             .selectFrom(question)
-            // questionDate가 하루의 시작과 끝 사이에 있는지 확인
-            .where(question.questionDate.between(startOfDay, endOfDay))
+            .where(question.questionDate.eq(today))
             .fetchOne()
     }
 }
