@@ -15,7 +15,7 @@ import com.th.plu.domain.domain.like.Like
 import com.th.plu.domain.domain.like.explorer.LikeExplorer
 import com.th.plu.domain.domain.like.repository.LikeRepository
 import com.th.plu.domain.domain.member.explorer.MemberExplorer
-import com.th.plu.domain.domain.question.QuestionExplorer
+import com.th.plu.domain.domain.question.explorer.QuestionExplorer
 import com.th.plu.domain.isUniqueError
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service

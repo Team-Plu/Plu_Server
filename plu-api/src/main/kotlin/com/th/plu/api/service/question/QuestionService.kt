@@ -1,8 +1,8 @@
 package com.th.plu.api.service.question
 
-import com.th.plu.domain.domain.answer.AnswerExplorer
-import com.th.plu.domain.domain.question.QuestionExplorer
+import com.th.plu.domain.domain.answer.explorer.AnswerExplorer
 import com.th.plu.domain.domain.question.QuestionResultDto
+import com.th.plu.domain.domain.question.explorer.QuestionExplorer
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -17,7 +17,7 @@ class QuestionService(
     fun getQuestionToday(memberId: Long): QuestionResultDto {
         val today = LocalDateTime.now()
 
-        return questionExplorer.findQuestion(today).let { todayQuestion ->
+        return questionExplorer.findQuestionDate(today).let { todayQuestion ->
             val answered = answerExplorer.hasAnswered(memberId, todayQuestion.id)
 
             QuestionResultDto(
