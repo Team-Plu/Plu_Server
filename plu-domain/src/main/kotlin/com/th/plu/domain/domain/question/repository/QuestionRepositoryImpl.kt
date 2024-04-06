@@ -7,6 +7,7 @@ import com.th.plu.domain.domain.member.QMember.member
 import com.th.plu.domain.domain.question.QQuestion.question
 import com.th.plu.domain.domain.question.Question
 import org.springframework.stereotype.Repository
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
 
@@ -25,6 +26,16 @@ class QuestionRepositoryImpl(private val queryFactory: JPAQueryFactory) : Questi
             .selectFrom(question)
             .where(question.exposedAt.eq(exposedAt))
             .fetchOne()
+    }
+
+    override fun findByExposedAtDateOrNull(exposedAtDate: LocalDate): Question? {
+        val startOfDay = exposedAtDate.atStartOfDay() // 해당 날짜의 00:00시
+        val endOfDay = exposedAtDate.plusDays(1).atStartOfDay().minusSeconds(1) // 다음 날짜의 00:00시에서 1초를 빼서 현재 날짜의 23:59:59로 설정
+
+        return queryFactory
+            .selectFrom(question)
+            .where(question.exposedAt.between(startOfDay, endOfDay))
+            .fetchFirst() // 해당 날짜의 첫 번째 질문 결과만 반환하거나, 결과가 없을 경우 null 반환
     }
 
     override fun findAllByExposedMonthIn(memberId: Long, yearMonth: YearMonth): List<Question> {
@@ -71,11 +82,4 @@ class QuestionRepositoryImpl(private val queryFactory: JPAQueryFactory) : Questi
             }
     }
 
-    override fun findTodayQuestion(): Question? {
-        val today = LocalDateTime.now()
-        return queryFactory
-            .selectFrom(question)
-            .where(question.questionDate.eq(today))
-            .fetchOne()
-    }
 }

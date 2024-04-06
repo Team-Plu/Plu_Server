@@ -15,7 +15,7 @@ class QuestionService(
 ) {
     @Transactional(readOnly = true)
     fun getQuestionToday(memberId: Long): QuestionResultDto {
-        val today = LocalDateTime.now()
+        val today = LocalDateTime.now().toLocalDate()
 
         return questionExplorer.findQuestionDate(today).let { todayQuestion ->
             val answered = answerExplorer.hasAnswered(memberId, todayQuestion.id)
