@@ -21,11 +21,12 @@ class QuestionRepositoryImpl(private val queryFactory: JPAQueryFactory) : Questi
             .fetchOne()
     }
 
-    override fun findByExposedAtOrNull(exposedAt: LocalDateTime): Question? {
+
+    override fun findByExposedAtOrNull(startOfPeriod: LocalDateTime, endOfPeriod: LocalDateTime): Question? {
         return queryFactory
             .selectFrom(question)
-            .where(question.exposedAt.eq(exposedAt))
-            .fetchOne()
+            .where(question.exposedAt.between(startOfPeriod, endOfPeriod))
+            .fetchFirst()
     }
 
     override fun findByExposedAtDateOrNull(exposedAtDate: LocalDate): Question? {

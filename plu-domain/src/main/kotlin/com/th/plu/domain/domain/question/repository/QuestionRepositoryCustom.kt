@@ -9,12 +9,10 @@ import java.time.YearMonth
 interface QuestionRepositoryCustom {
     fun findQuestionById(id: Long): Question?
 
-    fun findByExposedAtOrNull(exposedAt: LocalDateTime): Question?
+    fun findByExposedAtOrNull(startOfPeriod: LocalDateTime, endOfPeriod: LocalDateTime): Question?
 
     fun findAllByExposedMonthIn(memberId: Long, yearMonth: YearMonth): List<Question>
 
     fun findAllExposedAtInAnsweredMonth(memberId: Long): List<LocalDateTime>
-
-    fun findByExposedAtDateOrNull(exposedAt: LocalDate): Question?
 
 }

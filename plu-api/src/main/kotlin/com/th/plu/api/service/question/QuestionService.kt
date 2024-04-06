@@ -17,7 +17,7 @@ class QuestionService(
     fun getQuestionToday(memberId: Long): QuestionResultDto {
         val today = LocalDateTime.now().toLocalDate()
 
-        return questionExplorer.findQuestionDate(today).let { todayQuestion ->
+        return questionExplorer.findQuestionByDateTime(today).let { todayQuestion ->
             val answered = answerExplorer.hasAnswered(memberId, todayQuestion.id)
 
             QuestionResultDto(
