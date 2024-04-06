@@ -63,21 +63,21 @@ class AnswerService(
     }
 
     @Transactional(readOnly = true)
-    fun findEveryAnswersWithCursor(lastAnswerId: Long, pageSize: Long): EveryAnswerRetrieveResponses {
+    fun findAllAnswersWithCursor(lastAnswerId: Long, pageSize: Long): EveryAnswerRetrieveResponses {
         val todayQuestionId = questionExplorer.findTodayQuestion().id
         val answers = answerRepository.findEveryAnswersWithCursorAndPageSize(todayQuestionId, lastAnswerId, pageSize)
         return EveryAnswerRetrieveResponses(answers)
     }
 
     @Transactional(readOnly = true)
-    fun findEveryAnswerInfo(): EveryAnswerInfoResponse {
+    fun findAllAnswerInfo(): EveryAnswerInfoResponse {
         val todayQuestion = questionExplorer.findTodayQuestion()
         val answerCount = answerRepository.findPublicAnswersCountByQuestionId(todayQuestion.id)
 
         return EveryAnswerInfoResponse.of(todayQuestion, answerCount)
     }
 
-    fun findEveryAnswersLikeTopN(getCount: Long): EveryAnswerRetrieveResponses {
+    fun findAllAnswersLikeTopN(getCount: Long): EveryAnswerRetrieveResponses {
         val todayQuestion = questionExplorer.findTodayQuestion()
         val answers = answerRepository.findPublicAnswersLikeTopN(todayQuestion.id, getCount)
 

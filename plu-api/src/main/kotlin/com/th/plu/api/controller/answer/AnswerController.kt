@@ -8,8 +8,8 @@ import com.th.plu.api.controller.answer.dto.response.AnswerInfoResponse
 import com.th.plu.api.controller.answer.dto.response.EveryAnswerInfoResponse
 import com.th.plu.api.controller.answer.dto.toAnswerWriting
 import com.th.plu.api.controller.answer.dto.toWritingAnswerResponse
-import com.th.plu.common.dto.response.ApiResponse
 import com.th.plu.api.service.answer.AnswerService
+import com.th.plu.common.dto.response.ApiResponse
 import com.th.plu.domain.domain.answer.dto.EveryAnswerRetrieveResponses
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -62,7 +62,7 @@ class AnswerController(
     @GetMapping("/v1/answers/info")
     fun findEveryAnswerInfo(
     ): ApiResponse<EveryAnswerInfoResponse> {
-        return ApiResponse.success(answerService.findEveryAnswerInfo())
+        return ApiResponse.success(answerService.findAllAnswerInfo())
     }
 
     @Auth
@@ -72,7 +72,7 @@ class AnswerController(
         @RequestParam(defaultValue = Long.MAX_VALUE.toString()) lastAnswerId: Long,
         @RequestParam(defaultValue = "10") pageSize: Long,
     ): ApiResponse<EveryAnswerRetrieveResponses> {
-        return ApiResponse.success(answerService.findEveryAnswersWithCursor(lastAnswerId, pageSize))
+        return ApiResponse.success(answerService.findAllAnswersWithCursor(lastAnswerId, pageSize))
     }
 
     @Auth
@@ -81,6 +81,6 @@ class AnswerController(
     fun getAnswersAboutLikeTopN(
         @RequestParam(defaultValue = "10") getCount: Long,
     ): ApiResponse<EveryAnswerRetrieveResponses> {
-        return ApiResponse.success(answerService.findEveryAnswersLikeTopN(getCount))
+        return ApiResponse.success(answerService.findAllAnswersLikeTopN(getCount))
     }
 }
