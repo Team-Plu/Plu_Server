@@ -14,8 +14,9 @@ class QuestionExplorer(
     private val questionRepository: QuestionRepository,
 ) {
     fun findQuestion(id: Long): Question =
-        questionRepository.findById(id).orElse(null)
-            ?: throw NotFoundException(ErrorCode.NOT_FOUND_QUESTION_EXCEPTION, "존재하지 않는 질문 $id 입니다")
+        questionRepository.findById(id).orElseThrow {
+            NotFoundException(ErrorCode.NOT_FOUND_QUESTION_EXCEPTION, "존재 하지 않는 질문 $id 입니다")
+        }
 
     fun findQuestionByDateTime(dateTime: LocalDateTime): Question {
         // 입력된 dateTime이 밤 10시 이후인지 확인

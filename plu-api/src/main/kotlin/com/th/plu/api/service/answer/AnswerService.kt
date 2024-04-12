@@ -77,6 +77,7 @@ class AnswerService(
         return EveryAnswerInfoResponse.of(todayQuestion, answerCount)
     }
 
+    @Transactional(readOnly = true)
     fun findAllAnswersLikeTopN(getCount: Long): EveryAnswerRetrieveResponses {
         val todayQuestion = questionExplorer.findTodayQuestion()
         val answers = answerRepository.findPublicAnswersLikeTopN(todayQuestion.id, getCount)
@@ -92,16 +93,7 @@ class AnswerService(
 
         return try {
             answerRegister.registerAnswer(memberEntity, questionEntity, answerWriting.body, answerWriting.open).let {
-                WritingAnswerResult(
-                    questionId = questionEntity.id,
-                    questionTitle = questionEntity.title,
-                    questionContent = questionEntity.content,
-                    questionExposedAt = questionEntity.exposedAt,
-                    questionElementType = questionEntity.elementType,
-                    questionAnswered = true,
-                    answerId = it.id,
-                    answerBody = it.content,
-                    reactionLikeCount = 0 // 최초 생성시는 0
+                WritingAnswerResult(questionId = questionEntity.id, questionTitle = questionEntity.title, questionContent = questionEntity.content, questionExposedAt = questionEntity.exposedAt, questionElementType = questionEntity.elementType, questionAnswered = true, answerId = it.id, answerBody = it.content, reactionLikeCount = 0 // 최초 생성시는 0
                 )
             }
         } catch (e: DataIntegrityViolationException) {
