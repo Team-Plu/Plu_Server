@@ -49,4 +49,5 @@ enum class ErrorCode(val code: String, val message: String) {
 
     // Illegal Argument Exception
     Illegal_ARGUMENT_NICKNAME_EXCEPTION("IA001", "잘못된 닉네임 형식입니다."),
+    Illegal_ARGUMENT_ANSWER_COUNT_EXCEPTION("IA002", "answerCount는 비어있을 수 없습니다."),
 }

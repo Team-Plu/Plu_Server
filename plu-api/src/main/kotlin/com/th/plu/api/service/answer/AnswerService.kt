@@ -5,6 +5,7 @@ import com.th.plu.api.controller.answer.dto.response.EveryAnswerInfoResponse
 import com.th.plu.api.service.like.LikeValidator
 import com.th.plu.common.exception.code.ErrorCode
 import com.th.plu.common.exception.model.ConflictException
+import com.th.plu.common.exception.model.IllegalArgumentException
 import com.th.plu.domain.domain.answer.AnswerRegister
 import com.th.plu.domain.domain.answer.AnswerWriting
 import com.th.plu.domain.domain.answer.WritingAnswerResult
@@ -73,6 +74,7 @@ class AnswerService(
     fun findAllAnswerInfo(): EveryAnswerInfoResponse {
         val todayQuestion = questionExplorer.findTodayQuestion()
         val answerCount = answerRepository.findPublicAnswersCountByQuestionId(todayQuestion.id)
+            ?: throw IllegalArgumentException(ErrorCode.Illegal_ARGUMENT_ANSWER_COUNT_EXCEPTION, "answerCount는 비어 있을 수 없습니다.")
 
         return EveryAnswerInfoResponse.of(todayQuestion, answerCount)
     }
