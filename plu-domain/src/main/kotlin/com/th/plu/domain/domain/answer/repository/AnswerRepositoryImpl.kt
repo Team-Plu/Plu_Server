@@ -34,12 +34,12 @@ class AnswerRepositoryImpl(private val queryFactory: JPAQueryFactory) : AnswerRe
             .fetch()
     }
 
-    override fun findPublicAnswersCountByQuestionId(questionId: Long): Long {
+    override fun findPublicAnswersCountByQuestionId(questionId: Long): Long? {
         return queryFactory
             .select(answer._id.count())
             .from(answer)
             .where(answer.question._id.eq(questionId))
-            .fetchOne()!!
+            .fetchOne()
     }
 
     override fun findPublicAnswersLikeTopN(questionId: Long, getCount: Long): List<EveryAnswerRetrieveResponse> {
