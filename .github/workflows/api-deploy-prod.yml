@@ -48,7 +48,7 @@ jobs:
         shell: bash
 
       - name: Make zip file
-        run: zip -r ./api-code-deploy.zip ./plu-api/build/libs/*.jar ./scripts/plu-api/* -j
+        run: zip -r ./api-code-deploy2.zip ./plu-api/build/libs/*.jar ./scripts/plu-api/* -j
         shell: bash
 
       - name: Configure AWS credentials
@@ -59,7 +59,7 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./api-code-deploy.zip s3://$AWS_S3_BUCKET/api-code-deploy.zip
+        run: aws s3 cp --region ap-northeast-2 ./api-code-deploy2.zip s3://$AWS_S3_BUCKET/api-code-deploy.zip
 
       - name: Code Deploy
         run: aws deploy create-deployment
