@@ -54,7 +54,7 @@ jobs:
         shell: bash
 
       - name: Make zip file
-        run: zip -r ./notification-code-deploy.zip ./plu-notification/build/libs/*.jar ./scripts/plu-notification/* -j
+        run: zip -r ./notification-code-deploy2.zip ./plu-notification/build/libs/*.jar ./scripts/plu-notification/* -j
         shell: bash
 
       - name: Configure AWS credentials
@@ -65,11 +65,11 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./notification-code-deploy.zip s3://$AWS_S3_BUCKET/notification-code-deploy.zip
+        run: aws s3 cp --region ap-northeast-2 ./notification-code-deploy2.zip s3://$AWS_S3_BUCKET/notification-code-deploy2.zip
 
       - name: Code Deploy
         run: aws deploy create-deployment
           --application-name plu-application
           --deployment-config-name CodeDeployDefault.OneAtATime
           --deployment-group-name NOTIFICATION
-          --s3-location bucket=$AWS_S3_BUCKET,bundleType=zip,key=notification-code-deploy.zip
+          --s3-location bucket=$AWS_S3_BUCKET,bundleType=zip,key=notification-code-deploy2.zip
