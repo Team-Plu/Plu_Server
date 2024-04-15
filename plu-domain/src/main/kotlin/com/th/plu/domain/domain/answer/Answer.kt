@@ -28,8 +28,7 @@ class Answer(
     private var _id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "member_id", nullable = false)
-    private var member: Member,
+    @JoinColumn(name = "member_id", nullable = false) var member: Member,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "question_id", nullable = false)
@@ -53,6 +52,10 @@ class Answer(
         private set
 
     val questionId: Long = question.id
+
+    fun getLikeCount(): Int {
+        return likes.size
+    }
 }
 
 fun newAnswerInstance(member: Member, question: Question, content: String, isPublic: Boolean) = Answer(

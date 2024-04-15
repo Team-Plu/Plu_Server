@@ -5,6 +5,7 @@ import com.th.plu.api.controller.answer.dto.response.EveryAnswerInfoResponse
 import com.th.plu.api.service.like.LikeValidator
 import com.th.plu.common.exception.code.ErrorCode
 import com.th.plu.common.exception.model.ConflictException
+import com.th.plu.common.exception.model.IllegalArgumentException
 import com.th.plu.domain.domain.answer.AnswerRegister
 import com.th.plu.domain.domain.answer.AnswerWriting
 import com.th.plu.domain.domain.answer.WritingAnswerResult
@@ -15,7 +16,7 @@ import com.th.plu.domain.domain.like.Like
 import com.th.plu.domain.domain.like.explorer.LikeExplorer
 import com.th.plu.domain.domain.like.repository.LikeRepository
 import com.th.plu.domain.domain.member.explorer.MemberExplorer
-import com.th.plu.domain.domain.question.QuestionExplorer
+import com.th.plu.domain.domain.question.explorer.QuestionExplorer
 import com.th.plu.domain.isUniqueError
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
@@ -63,21 +64,23 @@ class AnswerService(
     }
 
     @Transactional(readOnly = true)
-    fun findEveryAnswersWithCursor(lastAnswerId: Long, pageSize: Long): EveryAnswerRetrieveResponses {
+    fun findAllAnswersWithCursor(lastAnswerId: Long, pageSize: Long): EveryAnswerRetrieveResponses {
         val todayQuestionId = questionExplorer.findTodayQuestion().id
         val answers = answerRepository.findEveryAnswersWithCursorAndPageSize(todayQuestionId, lastAnswerId, pageSize)
         return EveryAnswerRetrieveResponses(answers)
     }
 
     @Transactional(readOnly = true)
-    fun findEveryAnswerInfo(): EveryAnswerInfoResponse {
+    fun findAllAnswerInfo(): EveryAnswerInfoResponse {
         val todayQuestion = questionExplorer.findTodayQuestion()
         val answerCount = answerRepository.findPublicAnswersCountByQuestionId(todayQuestion.id)
+            ?: throw IllegalArgumentException(ErrorCode.Illegal_ARGUMENT_ANSWER_COUNT_EXCEPTION, "answerCount는 비어 있을 수 없습니다.")
 
         return EveryAnswerInfoResponse.of(todayQuestion, answerCount)
     }
 
-    fun findEveryAnswersLikeTopN(getCount: Long): EveryAnswerRetrieveResponses {
+    @Transactional(readOnly = true)
+    fun findAllAnswersLikeTopN(getCount: Long): EveryAnswerRetrieveResponses {
         val todayQuestion = questionExplorer.findTodayQuestion()
         val answers = answerRepository.findPublicAnswersLikeTopN(todayQuestion.id, getCount)
 
@@ -92,16 +95,7 @@ class AnswerService(
 
         return try {
             answerRegister.registerAnswer(memberEntity, questionEntity, answerWriting.body, answerWriting.open).let {
-                WritingAnswerResult(
-                    questionId = questionEntity.id,
-                    questionTitle = questionEntity.title,
-                    questionContent = questionEntity.content,
-                    questionExposedAt = questionEntity.exposedAt,
-                    questionElementType = questionEntity.elementType,
-                    questionAnswered = true,
-                    answerId = it.id,
-                    answerBody = it.content,
-                    reactionLikeCount = 0 // 최초 생성시는 0
+                WritingAnswerResult(questionId = questionEntity.id, questionTitle = questionEntity.title, questionContent = questionEntity.content, questionExposedAt = questionEntity.exposedAt, questionElementType = questionEntity.elementType, questionAnswered = true, answerId = it.id, answerBody = it.content, reactionLikeCount = 0 // 최초 생성시는 0
                 )
             }
         } catch (e: DataIntegrityViolationException) {

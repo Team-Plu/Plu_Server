@@ -10,7 +10,7 @@ interface AnswerRepositoryCustom {
 
     fun findEveryAnswersWithCursorAndPageSize(questionId: Long, lastAnswerId: Long, pageSize: Long): List<EveryAnswerRetrieveResponse>
 
-    fun findPublicAnswersCountByQuestionId(questionId: Long): Long
+    fun findPublicAnswersCountByQuestionId(questionId: Long): Long?
 
     fun findPublicAnswersLikeTopN(questionId: Long, getCount: Long): List<EveryAnswerRetrieveResponse>
 }

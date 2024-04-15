@@ -7,7 +7,6 @@ import com.th.plu.domain.domain.member.QMember.member
 import com.th.plu.domain.domain.question.QQuestion.question
 import com.th.plu.domain.domain.question.Question
 import org.springframework.stereotype.Repository
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
 
@@ -21,11 +20,12 @@ class QuestionRepositoryImpl(private val queryFactory: JPAQueryFactory) : Questi
             .fetchOne()
     }
 
-    override fun findByExposedAtOrNull(exposedAt: LocalDateTime): Question? {
+
+    override fun findByExposedAtOrNull(startOfPeriod: LocalDateTime, endOfPeriod: LocalDateTime): Question? {
         return queryFactory
             .selectFrom(question)
-            .where(question.exposedAt.eq(exposedAt))
-            .fetchOne()
+            .where(question.exposedAt.between(startOfPeriod, endOfPeriod))
+            .fetchFirst()
     }
 
     override fun findAllByExposedMonthIn(memberId: Long, yearMonth: YearMonth): List<Question> {
@@ -72,12 +72,4 @@ class QuestionRepositoryImpl(private val queryFactory: JPAQueryFactory) : Questi
             }
     }
 
-    override fun findTodayQuestion(): Question? {
-        val today = LocalDate.now()
-
-        return queryFactory
-            .selectFrom(question)
-            .where(question.questionDate.eq(today))
-            .fetchOne()
-    }
 }
